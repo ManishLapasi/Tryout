@@ -10,7 +10,7 @@ print(inputSudoku)
 (boolval, solvedSudoku) = drivers.solve(inputSudoku,0,0)
 
 if boolval:
-    print("Got a solution!")
+    print("Got a solution! :D")
     print(solvedSudoku)
 else:
-    print("Couldn't find a solution")
+    print("Couldn't find a solution :(")
