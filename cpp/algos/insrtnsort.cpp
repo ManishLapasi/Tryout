@@ -4,21 +4,14 @@ using namespace std;
 
 void solve(int * arr, int size){
 
-    for(int i=0; i<size;i++){
-        int j = 0;
-        if(arr[j]<=arr[i] && j<i){
-            j++;
+    for(int i=1; i<size;i++){
+        int j = i-1;
+        int temp = arr[i];
+        while (j >= 0 && temp<arr[j]){
+            arr[j+1] = arr[j];
+            j--;
         }
-        if(j==i){
-            continue;
-        }
-        else{
-            int tempval = arr[i];
-            for(int k = i; k > j; k--){
-                arr[k] = arr[k-1];
-            }
-            arr[j] = tempval;
-        }
+        arr[j+1] = temp;
     }
 
 }
