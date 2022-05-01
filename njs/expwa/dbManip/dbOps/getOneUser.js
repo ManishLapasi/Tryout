@@ -3,7 +3,7 @@ const {MongoClient} = require("mongodb");
 
 var findOne = function(db, callback) {
     var coll = db.db(config.dbName).collection("users");
-    coll.find({name:"Manish"}).toArray(function(err,records){
+    coll.find({favMovie:"Jojo Rabbit"}).toArray(function(err,records){
         if(err) throw err;
         console.log(records);
         callback(records);
