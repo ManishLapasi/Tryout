@@ -1,5 +1,5 @@
 const {MongoClient} = require('mongodb');
-const uri = require("../dbConnect/dbConnect").uri;
+const uri = require("../dbConnect/readCreds").uri;
 const config = require("../dbConnect/readCreds").config;
 
 console.log(uri);

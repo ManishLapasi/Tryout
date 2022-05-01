@@ -17,7 +17,7 @@ app.get('/hi',(req,res) => {
 });
 
 app.get('/about', (req,res) => {
-    fs.readFile('./pages/about.html',(err,data)=>{
+    fs.readFile('../pages/about.html',(err,data)=>{
         if(err){
             res.writeHead(404,{"Content-Type":"application/json"});
             res.end(JSON.stringify({message:"Error while getting page"}));
@@ -28,6 +28,18 @@ app.get('/about', (req,res) => {
             res.end();
         }
     });
+});
+
+app.get('/getrandom', (req,res) => {
+    const getRandom = require("./dbManip/dbOps/getRandomUser").getRandom;
+    res.writeHead(200,{"Content-Type":"application/json"});
+    res.end(JSON.stringify(getRandom));
+});
+
+app.get('/getone', (req,res) => {
+    const getOne = require("./dbManip/dbOps/getOneUser").getOne;
+    res.writeHead(200,{"Content-Type":"application/json"});
+    res.end(JSON.stringify(getOne));
 });
 
 app.listen(port, () => {
