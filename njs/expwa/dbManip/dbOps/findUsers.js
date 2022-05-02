@@ -2,19 +2,21 @@ const config = require("../dbConnect/readCreds").config;
 const uri = require("../dbConnect/readCreds").uri;
 const {MongoClient} = require("mongodb");
 
-async function findOne(Name) {
+async function findUsers(Name, Movie) {
     const client = await MongoClient.connect(uri, { useNewUrlParser: true })
-    .catch(err => {console.log(err);})
+    .catch((err) => {
+        console.log(err);
+    })
     if(!client){
         return;
     }
     try{
         const db = client.db(config.dbName);
         let coll = db.collection("users");
-        let query = {name:Name}
-        let res = await coll.findOne(query);
-        console.log(res);
-        return res;
+        let query = {name:Name,favMovie:Movie};
+        let data =  await coll.find(query).toArray();
+        console.log(data);
+        return data;
     }
     catch(err){
         console.log(err);
@@ -24,4 +26,4 @@ async function findOne(Name) {
     }
 }
 
-exports.findOne = findOne;
+exports.findUsers = findUsers;

@@ -4,6 +4,7 @@ const port = 3000;
 const bodyParser = require("body-parser");
 
 const fs = require("fs");
+const { create } = require("domain");
 
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -33,16 +34,10 @@ app.get('/about', (req,res) => {
     });
 });
 
-app.get('/getrandom', (req,res) => {
-    const getRandom = require("./dbManip/dbOps/getRandomUser").getRandom;
+app.get('/getrandomrecord', async (req,res) => {
+    const getRandom = await require("./dbManip/dbOps/getRandomUser").findOne("Manish");
     res.writeHead(200,{"Content-Type":"application/json"});
     res.end(JSON.stringify(getRandom));
-});
-
-app.get('/getone', (req,res) => {
-    const getOne = require("./dbManip/dbOps/getOneUser").getOne;
-    res.writeHead(200,{"Content-Type":"application/json"});
-    res.end(JSON.stringify(getOne));
 });
 
 app.get('/createuser',(req,res)=>{
@@ -59,13 +54,30 @@ app.get('/createuser',(req,res)=>{
     });
 });
 
-app.post('/createuser', (req,res) => {
-    console.log(req.body.name);
-    console.log(req.body.movie);
-    const createUser = require("./dbManip/dbOps/createUser").createUser;
-    createUser(req.body.name,req.body.movie);
+app.post('/createuser', async (req,res) => {
+    const createUser = await require("./dbManip/dbOps/createUser").createUser(req.body.name,req.body.movie);
     res.writeHead(200,{"Content-type":"application/json"});
-    res.end(JSON.stringify({message:"logged to console"}));
+    res.end(JSON.stringify(createUser));
+})
+
+app.get('/findusers', (req,res) => {
+    fs.readFile(__dirname+"/../pages/findUser.html",(err,data) => {
+        if(err){
+            res.writeHead(400,{"Content-type":"application/json"});
+            res.end(JSON.stringify({message:err}));
+        }
+        else{
+            res.writeHead(200,{"Content-type":"text/html"});
+            res.write(data);
+            res.end();
+        }
+    })
+})
+
+app.post('/findusers', async (req,res) => {
+    const Users = await require("./dbManip/dbOps/findUsers").findUsers(req.body.name,req.body.movie);
+    res.writeHead(200,{"Content-type":"application/json"})
+    res.end(JSON.stringify(Users));
 })
 
 app.listen(port, () => {
