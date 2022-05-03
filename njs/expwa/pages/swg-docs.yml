@@ -1,0 +1,76 @@
+swagger: '2.0'
+info:
+  description: Swagger documentation for a MongoDB instance
+  version: 1.0.0
+  title: ' Mongo'
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: localhost:3000
+basePath: /
+tags:
+  - name: users
+    description: Operations on Users collection
+schemes:
+  - http
+paths:
+  /users/createuser:
+    post:
+      tags:
+        - users
+      summary: Add a new user to the collection
+      description: ''
+      operationId: createuser
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: User record that needs to be added to the database
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: Success
+        '405':
+          description: Invalid input
+      security:
+        - users_auth:
+            - write:user
+            - read:user
+          bearer: []
+securityDefinitions:
+  users_auth:
+    type: oauth2
+    authorizationUrl: http://localhost.io/oauth/dialog
+    flow: implicit
+    scopes:
+      write:user: modify users in the collection
+      read:user: read users from collection
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header
+  bearer:
+    type: apiKey
+    name: bearer
+    in: header
+definitions:
+  User:
+    type: object
+    properties:
+      name:
+        type: string
+      movie:
+        type: string
+    xml:
+      name: User
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io

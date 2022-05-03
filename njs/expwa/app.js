@@ -3,10 +3,12 @@ const app = express();
 const port = 3000;
 const bodyParser = require("body-parser");
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('../pages/swagger.json');
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./pages/swg-docs.yml");
 const fs = require("fs");
 const logger = require("./middleware/logger").logger; 
 const authenticate = require("./middleware/auth").authenticate;
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -27,7 +29,7 @@ app.get('/hi',(req,res) => {
 });
 
 app.get('/about', (req,res) => {
-    fs.readFile(__dirname+'/../pages/about.html',(err,data)=>{
+    fs.readFile(__dirname+'./pages/about.html',(err,data)=>{
         if(err){
             res.writeHead(404,{"Content-Type":"application/json"});
             res.end(JSON.stringify({message:err}));
@@ -47,7 +49,7 @@ app.get('/getrandomrecord', async (req,res) => {
 });
 
 app.get('/users/createuser',(req,res)=>{
-    fs.readFile(__dirname+"/../pages/createUserForm.html",(err,data) => {
+    fs.readFile(__dirname+"./pages/createUserForm.html",(err,data) => {
         if(err){
             res.writeHead(404,{"Content-type":"application/json"});
             res.end(JSON.stringify({message:err}));
@@ -68,7 +70,7 @@ app.post('/users/createuser', async (req,res) => {
 })
 
 app.get('/findusers', (req,res) => {
-    fs.readFile(__dirname+"/../pages/findUser.html",(err,data) => {
+    fs.readFile(__dirname+"./pages/findUser.html",(err,data) => {
         if(err){
             res.writeHead(400,{"Content-type":"application/json"});
             res.end(JSON.stringify({message:err}));
