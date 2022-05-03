@@ -2,11 +2,17 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const bodyParser = require("body-parser");
-
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../pages/swagger.json');
 const fs = require("fs");
-const { create } = require("domain");
+const logger = require("./middleware/logger").logger; 
+const authenticate = require("./middleware/auth").authenticate;
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(logger);
+app.use(authenticate);
 
 app.get('/',(req,res) => {
     res.writeHead(200,{"Content-Type":"application/json"});
@@ -40,7 +46,7 @@ app.get('/getrandomrecord', async (req,res) => {
     res.end(JSON.stringify(getRandom));
 });
 
-app.get('/createuser',(req,res)=>{
+app.get('/users/createuser',(req,res)=>{
     fs.readFile(__dirname+"/../pages/createUserForm.html",(err,data) => {
         if(err){
             res.writeHead(404,{"Content-type":"application/json"});
@@ -54,10 +60,11 @@ app.get('/createuser',(req,res)=>{
     });
 });
 
-app.post('/createuser', async (req,res) => {
+app.post('/users/createuser', async (req,res) => {
     const createUser = await require("./dbManip/dbOps/createUser").createUser(req.body.name,req.body.movie);
     res.writeHead(200,{"Content-type":"application/json"});
     res.end(JSON.stringify(createUser));
+    //res.end();
 })
 
 app.get('/findusers', (req,res) => {
