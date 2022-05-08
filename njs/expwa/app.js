@@ -42,13 +42,7 @@ app.get('/about', (req,res) => {
     });
 });
 
-app.get('/getrandomrecord', async (req,res) => {
-    const getRandom = await require("./dbManip/dbOps/getRandomUser").findOne("Manish");
-    res.writeHead(200,{"Content-Type":"application/json"});
-    res.end(JSON.stringify(getRandom));
-});
-
-app.get('/users/createuser',(req,res)=>{
+app.get('/users/createUser',(req,res)=>{
     fs.readFile(__dirname+"./pages/createUserForm.html",(err,data) => {
         if(err){
             res.writeHead(404,{"Content-type":"application/json"});
@@ -62,14 +56,14 @@ app.get('/users/createuser',(req,res)=>{
     });
 });
 
-app.post('/users/createuser', async (req,res) => {
+app.post('/users/createUser', async (req,res) => {
     const createUser = await require("./dbManip/dbOps/createUser").createUser(req.body.name,req.body.movie);
     res.writeHead(200,{"Content-type":"application/json"});
     res.end(JSON.stringify(createUser));
     //res.end();
 })
 
-app.get('/findusers', (req,res) => {
+app.get('/users/findUsersByName', (req,res) => {
     fs.readFile(__dirname+"./pages/findUser.html",(err,data) => {
         if(err){
             res.writeHead(400,{"Content-type":"application/json"});
@@ -83,10 +77,16 @@ app.get('/findusers', (req,res) => {
     })
 })
 
-app.post('/findusers', async (req,res) => {
-    const Users = await require("./dbManip/dbOps/findUsers").findUsers(req.body.name,req.body.movie);
+app.post('/users/findUsersByName', async (req,res) => {
+    const Users = await require("./dbManip/dbOps/findUsers").findUsers(req.body.name);
     res.writeHead(200,{"Content-type":"application/json"})
     res.end(JSON.stringify(Users));
+})
+
+app.post("/users/deleteUser", async (req,res) => {
+    const deletedUsers = await require("./dbManip/dbOps/deleteUser").deleteUser(req.body.Id);
+    res.writeHead(200,{"Content-Type":"application/json"});
+    res.end(JSON.stringify(deletedUsers));
 })
 
 app.listen(port, () => {

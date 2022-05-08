@@ -17,13 +17,44 @@ tags:
 schemes:
   - http
 paths:
-  /users/createuser:
+  /users/findUsersByName:
+    post:
+      tags:
+        - users
+      summary: Get users with a specific name
+      description: ''
+      operationId: findUsersByName
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Name of users needed to be retrieved
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+      responses:
+        '200':
+          description: Success
+        '405':
+          description: Invalid input
+      security:
+        - users_auth:
+            - write:user
+            - read:user
+          bearer: []
+  /users/createUser:
     post:
       tags:
         - users
       summary: Add a new user to the collection
       description: ''
-      operationId: createuser
+      operationId: createUser
       consumes:
         - application/json
       produces:
@@ -35,6 +66,37 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: Success
+        '405':
+          description: Invalid input
+      security:
+        - users_auth:
+            - write:user
+            - read:user
+          bearer: []
+  /users/deleteUser:
+    post:
+      tags:
+        - users
+      summary: Delete user record by id
+      description: ''
+      operationId: deleteUser
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Id of User record which needs to be deleted from the database
+          required: true
+          schema:
+            type: object
+            properties:
+              Id:
+                type: string
       responses:
         '200':
           description: Success
